@@ -1,39 +1,40 @@
  <?php 
       include 'koneksi.php';
+      $no = $_GET ['no_pendaftaran'];
+      $result = mysqli_query ($conn , "SELECT * FROM pendaftaran WHERE no_pendaftaran = '$no' ");
 
-      if (isset($_POST['submit'])) {
-       
-        // ambil 1 id terbesar di kolom no_pendaftaran, lalu ambil 5 karakter aja dari sebelah kanan
-        $getMaxId = mysqli_query($conn, "SELECT MAX(RIGHT(no_pendaftaran,5)) AS no FROM pendaftaran");
-        $d = mysqli_fetch_object($getMaxId);
-        $generateId = 'P'.date('Y').sprintf("%05s", $d->no + 1);
-        echo $generateId;
-
-        // proses insert
-
-        $insert = mysqli_query($conn, "INSERT INTO pendaftaran VALUES (
-          '".$generateId."',
-          '".date('Y-m-d')."',
-          '".$_POST['thn_ajaran']."',
-          '".$_POST['jurusan']."',
-          '".$_POST['nama']."',
-          '".$_POST['tgl_lahir']."',
-          '".$_POST['jk']."',
-          '".$_POST['kelas']."',
-          '".$_POST['jadwal']."',
-          '".$_POST['alamat']."',
-          '".$_POST['agama']."',
-          '".$_POST['mata_pelajaran']."'
-          )");
+      if (isset($_POST['ubah']))
+       {
+        $no_pendaftaran = $_POST ['no_pendaftaran'];
+        $daftar = $_POST ['tgl_daftar'];
+        $thn_ajaran = $_POST ['thn_ajaran'];
+        $jurusan = $_POST ['jurusan'];
+        $nama = $_POST ['nama'];
+        $tgl_lahir = $_POST ['tgl_lahir'];
+        $jk = $_POST ['jk'];
+        $kelas = $_POST ['kelas'];
+        $jadwal = $_POST ['jadwal'];
+        $alamat = $_POST ['alamat'];
+        $agama = $_POST ['agama'];
+        $mata_pelajaran = $_POST ['mata_pelajaran'];
 
 
-        if($insert){
-          echo '<script>window.location="berhasil.php?no='.$generateId.'"</script>';
+        $query = mysqli_query($conn , "UPDATE pendaftaran SET no_pendaftaran = '$no_pendaftaran',tgl_daftar = '$daftar',thn_ajaran = '$thn_ajaran',jurusan = '$jurusan',nama = '$nama',tgl_lahir = '$tgl_lahir',jk = '$jk',kelas = '$kelas',jadwal = '$jadwal',alamat = '$alamat',agama = '$agama',mata_pelajaran = '$mata_pelajaran' WHERE no_pendaftaran = '$no_pendaftaran'");
+
+        if ($query) {
+         echo "
+                <script>
+                  alert('data berhasil anda ubah say');
+                  document.location.href = 'data_peserta.php';
+                </script>
+              ";
         }else{
-          echo 'huft'.mysqli_error($conn);
+          echo "data gagal anda ubah say";
         }
 
       }
+
+     
 ?>
 
  <!DOCTYPE html>
@@ -58,20 +59,29 @@
     
         <div class="box">
           <table border="0" class="table-form">
+            <?php
 
-           <!--  <tr>
+                while ($row = mysqli_fetch_array($result)) {
+            ?>
+            <tr>
               <td>No Pendaftaran</td>
               <td>:</td>
               <td>
-                <input type="hidden" name="no_pendaftaran" class="input-control">
+                <input type="hidden" name="no_pendaftaran" class="input-control" value="<?php echo $row['no_pendaftaran'] ?>" readonly>
+              </td>
+            </tr>           
+             <tr>
+              <td>Tanggal Daftar</td>
+              <td>:</td>
+              <td>
+                <input type="text" name="tgl_daftar" class="input-control" value="<?php echo $row['tgl_daftar'] ?>" readonly>
               </td>
             </tr>
- -->
             <tr>
               <td>Tahun Ajaran</td>
               <td>:</td>
               <td>
-                <input type="text" name="thn_ajaran" class="input-control" value="2020/2021" readonly>
+                <input type="text" name="thn_ajaran" class="input-control" value="<?php echo $row['thn_ajaran'] ?>" readonly>
               </td>
             </tr>
 
@@ -79,8 +89,8 @@
               <td>Jurusan</td>
               <td>:</td>
               <td>
-                <select class="input-control" name="jurusan">
-                  <option value="">--Pilih--</option>
+                <select class="input-control" name="jurusan" value="<?php echo $row['jurursan'] ?>">
+                 
                   <option value="Teknik Otomotif">Rekayasa Perangkat Lunak</option>
                   <option value="Teknik Otomotif">Teknik Komputer dan Jaringan</option>
                   <option value="Teknik Otomotif">Teknik Industri</option>
@@ -103,7 +113,7 @@
               <td>Nama Lengkap</td>
               <td>:</td>
               <td>
-                <input type="text" name="nama" class="input-control">
+                <input type="text" name="nama" class="input-control" value="<?php echo $row['nama'] ?>">
               </td>
             </tr>
 
@@ -111,7 +121,7 @@
               <td>Tanggal Lahir</td>
               <td>:</td>
               <td>
-                <input type="date" name="tgl_lahir" class="input-control">
+                <input type="date" name="tgl_lahir" class="input-control" value="<?php echo $row['tgl_lahir'] ?>">
               </td>
             </tr>
 
@@ -119,8 +129,11 @@
               <td>Jenis Kelamin</td>
               <td>:</td>
               <td>
-                <input type="radio" name="jk" class="input-control" value="Laki-laki"> Laki-laki  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                <input type="radio" name="jk" class="input-control" value="Perempuan"> Perempuan
+              <select class="input-control" name="jk" value="<?php echo $row['jk'] ?>">
+                 
+                  <option value="laki-laki">Laki - laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
               </td>
             </tr>
 
@@ -128,7 +141,7 @@
               <td>Kelas</td>
               <td>:</td>
               <td>
-                <input type="text" name="kelas" class="input-control">
+                <input type="text" name="kelas" class="input-control" value="<?php echo $row['kelas'] ?>">
               </td>
             </tr>
 
@@ -136,24 +149,24 @@
               <td>Jadwal</td>
               <td>:</td>
               <td>
-                <input type="text" name="jadwal" class="input-control">
+                <input type="text" name="jadwal" class="input-control" value="<?php echo $row['jadwal'] ?>">
               </td>
             </tr>
 
             <tr>
               <td>Alamat Lengkap</td>
               <td>:</td>
-              <td>
-                <textarea class="input-control" name="alamat"></textarea>
-              </td>
+               <td>
+                <input type="text" name="alamat" class="input-control" value="<?php echo $row['alamat'] ?>">
+             </td>
             </tr>
 
             <tr>
               <td>Agama</td>
               <td>:</td>
               <td>
-                <select class="input-control" name="agama">
-                  <option value="">--Pilih--</option>
+                <select class="input-control" name="agama" value="<?php echo $row['agama'] ?>">
+                  
                   <option value="Islam">Islam</option>
                   <option value="Kristen">Kristen</option>
                   <option value="Hindu">Hindu</option>
@@ -168,7 +181,7 @@
               <td>Mata Pelajaran</td>
               <td>:</td>
               <td>
-                <input type="text" name="mata_pelajaran" class="input-control">
+                <input type="text" name="mata_pelajaran" class="input-control" value="<?php echo $row['mata_pelajaran'] ?>">
               </td>
             </tr>
 
@@ -176,12 +189,12 @@
               <td></td>
               <td></td>
               <td>
-                <input type="submit" name="submit" class="btn-daftar" value="Daftar">
+                <input type="submit" name="ubah" class="btn-daftar" value="Daftar">
               </td>
             </tr>
 
 
-            
+            <?php } ?>
           </table>
         </div>
 

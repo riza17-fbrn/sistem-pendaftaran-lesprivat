@@ -25,7 +25,7 @@
       <ul>
         <li><a href="beranda.php">Beranda</a></li>
         <li><a href="data_peserta.php">Data Peserta</a></li>
-        <li><a href="keluar">Keluar</a></li>
+        <li><a href="keluar.php">Keluar</a></li>
       </ul>
     </header>
 
@@ -59,7 +59,8 @@
               <td><?php echo $row['jk'] ?></td>
               <td>
                 <a href="detail_peserta.php?no=<?php echo $row['no_pendaftaran'] ?>">Detail</a> ||
-                <a href="hapus_peserta.php?no=<?php echo $row['no_pendaftaran'] ?>" onclick="return confirm('Yakin?')">Hapus</a>
+                <a href="hapus_peserta.php?no=<?php echo $row['no_pendaftaran'] ?>" onclick="return confirm('Yakin?')">Hapus</a>||
+                <a href="update.php?no_pendaftaran=<?php echo $row['no_pendaftaran'] ?>">Edit</a>
               </td>
             </tr>
 

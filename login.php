@@ -8,7 +8,7 @@
         $cek = mysqli_query($conn, "SELECT * FROM admin 
           WHERE username = '".htmlspecialchars($_POST['user'])."' AND password = '".MD5(htmlspecialchars($_POST['pass']))."' ");
 
-        if(mysqli_num_rows($cek) > 0){
+         if(mysqli_num_rows($cek) > 0){
           $a = mysqli_fetch_object($cek);
 
           $_SESSION['stat_login'] = true;
